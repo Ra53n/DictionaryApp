@@ -2,16 +2,16 @@ package com.example.dictionaryapp.presentation.view
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.dictionaryapp.R
-import com.example.dictionaryapp.data.model.AppState
 import com.example.dictionaryapp.databinding.ActivityMainBinding
-import com.example.dictionaryapp.presentation.presenter.MainPresenter
-import org.koin.android.ext.android.inject
+import com.example.dictionaryapp.presentation.viewModel.MainViewModelContract
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity<MainPresenter>() {
-    override val presenter: MainPresenter by inject()
+class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModelContract.ViewModel by viewModel()
 
     private val binding: ActivityMainBinding by viewBinding()
 
@@ -20,29 +20,31 @@ class MainActivity : BaseActivity<MainPresenter>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initViews()
+        observeData()
+    }
+
+    private fun initViews() {
         binding.recycler.adapter = adapter
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let { presenter.searchWord(it) }
+                query?.let { viewModel.searchWord(it) }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { presenter.searchWord(it) }
+                newText?.let { viewModel.searchWord(it) }
                 return true
             }
-
         })
     }
 
-    override fun renderData(state: AppState) {
-        when (state) {
-            is AppState.Success -> {
-                adapter.setItems(state.meanings)
-            }
-            is AppState.Error -> {
-                Toast.makeText(this, "Произошла ошибка!", Toast.LENGTH_SHORT).show()
-            }
+    private fun observeData() {
+        viewModel.meanings.observe(this) {
+            adapter.setItems(it)
+        }
+        viewModel.error.observe(this) {
+            Toast.makeText(this, "Произошла ошибка!", Toast.LENGTH_SHORT).show()
         }
     }
 }
