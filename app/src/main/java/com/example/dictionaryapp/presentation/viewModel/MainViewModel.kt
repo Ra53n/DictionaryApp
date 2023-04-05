@@ -2,6 +2,7 @@ package com.example.dictionaryapp.presentation.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.dictionaryapp.data.repository.HistoryRepository
 import com.example.dictionaryapp.data.repository.SkyengRepository
 import com.example.dictionaryapp.presentation.SingleLiveEvent
 import com.example.dictionaryapp.presentation.mapper.MeaningUiModelMapper
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val repo: SkyengRepository,
-    private val mapper: MeaningUiModelMapper
+    private val mapper: MeaningUiModelMapper,
+    private val historyRepository: HistoryRepository
 ) : MainViewModelContract.ViewModel() {
 
     override val meanings: MutableLiveData<List<MeaningUiModel>> = MutableLiveData()
@@ -26,6 +28,7 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val searchResponse = repo.searchWord(word)
             meanings.postValue(mapper.map(searchResponse.meanings))
+            historyRepository.addWordToHistory(word, searchResponse.meanings.first().translation)
         }
     }
 }

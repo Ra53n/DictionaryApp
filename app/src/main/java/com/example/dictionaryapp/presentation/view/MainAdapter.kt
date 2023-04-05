@@ -3,8 +3,9 @@ package com.example.dictionaryapp.presentation.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dictionaryapp.R
-import com.example.dictionaryapp.databinding.MeaningAdapterItemBinding
+import com.example.dictionaryapp.databinding.AdapterItemBinding
 import com.example.dictionaryapp.presentation.model.MeaningUiModel
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
@@ -20,7 +21,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return MainViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.meaning_adapter_item, parent, false)
+                .inflate(R.layout.adapter_item, parent, false)
         )
     }
 
@@ -31,7 +32,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     }
 
     inner class MainViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = MeaningAdapterItemBinding.bind(itemView)
+        private val binding = AdapterItemBinding.bind(itemView)
 
         fun bind(meaning: MeaningUiModel) {
             binding.translation.text = "Перевод: ${meaning.meaning}"
@@ -40,6 +41,9 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
             } else {
                 binding.note.text = "В контексте: ${meaning.note}"
             }
+            Glide.with(binding.preview.context)
+                .load(meaning.imageUrl)
+                .centerCrop().into(binding.preview)
         }
     }
 }
