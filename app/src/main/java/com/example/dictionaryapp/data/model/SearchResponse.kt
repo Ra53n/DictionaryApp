@@ -10,7 +10,8 @@ data class SearchResponse(
 
 data class MeaningResponse(
     val id: Long,
-    val translation: TranslationResponse
+    val translation: TranslationResponse,
+    val imageUrl: String
 ) : Serializable
 
 data class TranslationResponse(

@@ -6,6 +6,7 @@ class SearchEntity(
 ) {
     class MeaningEntity(
         val translation: String,
-        val note: String?
+        val note: String?,
+        val previewUrl: String
     )
 }

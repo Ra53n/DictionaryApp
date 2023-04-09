@@ -11,7 +11,8 @@ class SearchResponseToEntityMapper {
             meanings = response.meanings.map {
                 SearchEntity.MeaningEntity(
                     translation = it.translation.text,
-                    note = it.translation.note
+                    note = it.translation.note,
+                    previewUrl = it.imageUrl
                 )
             }
         )
