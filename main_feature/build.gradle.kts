@@ -1,5 +1,4 @@
 import Dependencies.KOIN_DEP
-import Dependencies.VIEWBINDING_DELEGATE_DEP
 
 plugins {
     id("com.android.library")
@@ -29,9 +28,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -48,9 +44,6 @@ dependencies {
 
     //Koin
     implementation(KOIN_DEP)
-
-    //View Binding
-    implementation(VIEWBINDING_DELEGATE_DEP)
 
     // Retrofit 2
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

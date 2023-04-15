@@ -2,10 +2,12 @@ package com.example.main_feature.presentation.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.core.presentation.utils.viewById
 import com.example.main_feature.R
-import com.example.main_feature.databinding.AdapterItemBinding
 import com.example.main_feature.presentation.model.MeaningUiModel
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
@@ -32,18 +34,23 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     }
 
     inner class MainViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = AdapterItemBinding.bind(itemView)
 
         fun bind(meaning: MeaningUiModel) {
-            binding.translation.text = "Перевод: ${meaning.meaning}"
+            val translation by viewById<TextView>(R.id.translation)
+            val note by viewById<TextView>(R.id.note)
+            val preview by viewById<ImageView>(R.id.preview)
+
+            translation.text = "Перевод: ${meaning.meaning}"
+
             if (meaning.note.isNullOrEmpty()) {
-                binding.note.visibility = android.view.View.GONE
+                note.visibility = android.view.View.GONE
             } else {
-                binding.note.text = "В контексте: ${meaning.note}"
+                note.text = "В контексте: ${meaning.note}"
             }
-            Glide.with(binding.preview.context)
+
+            Glide.with(preview.context)
                 .load(meaning.imageUrl)
-                .centerCrop().into(binding.preview)
+                .centerCrop().into(preview)
         }
     }
 }

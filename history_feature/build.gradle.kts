@@ -1,5 +1,4 @@
 import Dependencies.KOIN_DEP
-import Dependencies.VIEWBINDING_DELEGATE_DEP
 
 plugins {
     id("com.android.library")
@@ -29,10 +28,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -53,9 +48,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.1")
     kapt("androidx.room:room-compiler:2.5.1")
     implementation("androidx.room:room-ktx:2.5.1")
-
-    //View Binding
-    implementation(VIEWBINDING_DELEGATE_DEP)
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
