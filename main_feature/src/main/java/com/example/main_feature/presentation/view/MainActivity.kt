@@ -4,23 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
-import by.kirich1409.viewbindingdelegate.viewBinding
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.core.presentation.utils.viewById
 import com.example.history_feature.presentation.view.HistoryActivity
 import com.example.main_feature.R
-import com.example.main_feature.databinding.ActivityMainBinding
 import com.example.main_feature.presentation.viewModel.MainViewModelContract
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.component.getOrCreateScope
+import org.koin.core.scope.Scope
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KoinScopeComponent {
+
+    override val scope: Scope by getOrCreateScope()
+
     private val viewModel: MainViewModelContract.ViewModel by viewModel()
 
-    private val binding: ActivityMainBinding by viewBinding()
+    private val recyclerView by viewById<RecyclerView>(R.id.recycler)
+
+    private val searchView by viewById<SearchView>(R.id.searchView)
+
+    private val historyFab by viewById<FloatingActionButton>(R.id.historyFab)
 
     private val adapter by lazy { MainAdapter() }
 
@@ -32,11 +38,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.recycler.adapter = adapter
-        binding.searchView.setOnQueryTextListener(DebouncingQueryTextListener(lifecycle) { word ->
+        recyclerView.adapter = adapter
+        searchView.setOnQueryTextListener(DebouncingQueryTextListener(lifecycle) { word ->
             word?.let { viewModel.searchWord(it) }
         })
-        binding.historyFab.setOnClickListener {
+        historyFab.setOnClickListener {
             startActivity(Intent(applicationContext, HistoryActivity::class.java))
         }
     }
@@ -46,33 +52,12 @@ class MainActivity : AppCompatActivity() {
             adapter.setItems(it)
         }
         viewModel.error.observe(this) {
-            Toast.makeText(this, "Произошла ошибка!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_recieved), Toast.LENGTH_SHORT).show()
         }
     }
-}
 
-class DebouncingQueryTextListener(
-    lifecycle: Lifecycle,
-    private val onDebouncingQueryTextChange: (String?) -> Unit
-) : OnQueryTextListener {
-    var debouncePeriod: Long = 500
-
-    private val coroutineScope = lifecycle.coroutineScope
-
-    private var searchJob: Job? = null
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        searchJob?.cancel()
-        searchJob = coroutineScope.launch {
-            newText?.let {
-                delay(debouncePeriod)
-                onDebouncingQueryTextChange(newText)
-            }
-        }
-        return false
+    override fun onDestroy() {
+        scope.close()
+        super.onDestroy()
     }
 }

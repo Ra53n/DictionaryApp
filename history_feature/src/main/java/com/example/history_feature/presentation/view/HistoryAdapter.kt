@@ -2,9 +2,10 @@ package com.example.history_feature.presentation.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.presentation.utils.viewById
 import com.example.history_feature.R
-import com.example.history_feature.databinding.HistoryAdapterItemBinding
 import com.example.history_feature.presentation.model.HistoryUiModel
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
@@ -31,11 +32,11 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     }
 
     inner class HistoryViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = HistoryAdapterItemBinding.bind(itemView)
-
         fun bind(history: HistoryUiModel) {
-            binding.translation.text = "Запрос: ${history.word}"
-            binding.note.text = "Перевод: ${history.description}"
+            val translation by viewById<TextView>(R.id.historyTranslation)
+            val note by viewById<TextView>(R.id.historyNote)
+            translation.text = "Запрос: ${history.word}"
+            note.text = "Перевод: ${history.description}"
         }
     }
 }
