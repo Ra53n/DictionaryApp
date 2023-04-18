@@ -52,11 +52,14 @@ dependencies {
     implementation("com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0")
 
 
-    // Gradle
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.11.0")
     implementation("com.github.bumptech.glide:annotations:4.11.0")
     implementation("com.github.bumptech.glide:okhttp3-integration:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
+    // Splash screen
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

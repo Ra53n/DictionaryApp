@@ -3,6 +3,7 @@ package com.example.history_feature.data.di
 import androidx.room.Room
 import com.example.history_feature.data.repository.HistoryRepositoryImpl
 import com.example.history_feature.data.room.HistoryDatabase
+import com.example.history_feature.domain.interactor.HistoryInteractor
 import com.example.history_feature.domain.repository.HistoryRepository
 import com.example.history_feature.presentation.mapper.HistoryUiModelMapper
 import com.example.history_feature.presentation.view.HistoryActivity
@@ -22,6 +23,8 @@ val historyModule = module {
     single { get<HistoryDatabase>().historyDao() }
 
     factory<HistoryRepository> { HistoryRepositoryImpl(historyDao = get()) }
+
+    factory { HistoryInteractor(historyRepository = get()) }
 
     scope<HistoryActivity> {
 

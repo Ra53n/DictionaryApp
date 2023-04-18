@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.presentation.utils.viewById
 import com.example.history_feature.presentation.view.HistoryActivity
@@ -15,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinScopeComponent
 import org.koin.core.component.getOrCreateScope
 import org.koin.core.scope.Scope
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity(), KoinScopeComponent {
 
@@ -31,7 +33,16 @@ class MainActivity : AppCompatActivity(), KoinScopeComponent {
     private val adapter by lazy { MainAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        splashScreen.setKeepOnScreenCondition { true }
+
+        Executors.newSingleThreadExecutor().execute {
+            Thread.sleep(2000)
+            splashScreen.setKeepOnScreenCondition { false }
+        }
+
         setContentView(R.layout.activity_main)
         initViews()
         observeData()
